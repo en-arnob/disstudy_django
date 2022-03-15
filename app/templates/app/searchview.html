@@ -1,0 +1,78 @@
+{% extends 'app/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<style>
+	.profile-pic{
+		max-width: 50px;
+		max-height:50px;
+		margin: 0 auto;
+		border-radius: 50%;
+	}
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #89c9b8;" >
+  <a class="navbar-brand text-dark" href="{% url 'home' %}">
+    <img src="https://smallimg.pngkey.com/png/small/136-1362513_conversation-icon-conversation-icon-transparent.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+    Disstudy: Discuss, study and beyond!
+  </a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav mr-auto">
+  <li class="nav-item active">
+    <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+  </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Settings
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <a class="dropdown-item" href="#">Action</a>
+      <a class="dropdown-item" href="#">Another action</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="#">Something else here</a>
+    </div>
+  </li>
+</ul>
+<form method="GET" action="/search" class="form-inline my-2 my-lg-0">
+  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query" id="query">
+  <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</button>
+  <a class="nav-link text-dark" href="{% url 'logout' %}" >Logout</a>
+</form>
+</div>
+</nav>
+<div class="container">
+  <div class="row">
+<h3 class="text-dark mt-4 ml-4">Search Results</h3>
+    <div class="col-8">
+
+{% for discussion in discussions %}
+
+
+<div class="card mt-3">
+  <div class="card-header">
+    <img class="profile-pic" src="{{discussion.author.profile_pic.url}}"> 
+    posted by: <b>{{ discussion.author }} </b> on {{ discussion.date }}
+  </div>
+  <div class="card-body">
+    <a href="{% url 'discussionThread' discussion.id %}"><h3 class="card-title text-dark">{{ discussion.title }}</h3></a>
+    <p class="card-text">{{ discussion.post|striptags|truncatechars:100 }}</p>
+    <a href="{% url 'discussionThread' discussion.id %}" class="btn btn-light">View Discussion</a>
+  </div>
+</div>
+
+{% endfor %}
+<br>
+</div>
+
+
+
+
+</div>
+{% endblock %}

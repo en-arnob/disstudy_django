@@ -1,0 +1,101 @@
+{% extends 'app/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<style>
+	.profile-pic{
+		max-width: 50px;
+		max-height:50px;
+		margin: 0 auto;
+		border-radius: 50%;
+	}
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #89c9b8;" >
+  <a class="navbar-brand text-dark" href="{% url 'home' %}">
+    <img src="https://smallimg.pngkey.com/png/small/136-1362513_conversation-icon-conversation-icon-transparent.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+    Disstudy: Discuss, study and beyond!
+  </a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+<ul class="navbar-nav mr-auto">
+  <li class="nav-item active">
+    <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+  </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Options
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <a class="dropdown-item" href="#">About</a>
+      <a class="dropdown-item" href="https://feebase.byterhythms.com/">feeBase</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="https://byterhythms.com/">byteRhythms</a>
+    </div>
+  </li>
+</ul>
+<form method="GET" action="/search" class="form-inline my-2 my-lg-0">
+  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" id="search">
+  <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Search</button>
+  <a class="nav-link text-dark" href="{% url 'logout' %}" >Logout</a>
+</form>
+</div>
+</nav>
+<div class="container">
+  <div class="row">
+<h1 class="text-dark mt-4 ml-4">Latest discussions in your class</h1>
+    <div class="col-8">
+
+{% for discussion in discussions %}
+
+
+<div class="card mt-3">
+  <div class="card-header">
+    <img class="profile-pic" src="{{discussion.author.profile_pic.url}}"> 
+    posted by: <b>{{ discussion.author }} </b> on {{ discussion.date }}
+  </div>
+  <div class="card-body">
+    <a href="{% url 'discussionThread' discussion.id %}"><h3 class="card-title text-dark">{{ discussion.title }}</h3></a>
+    <p class="card-text">{{ discussion.post|striptags|truncatechars:100 }}</p>
+    <a href="{% url 'discussionThread' discussion.id %}" class="btn btn-light">View Discussion</a>
+  </div>
+</div>
+
+{% endfor %}
+<br>
+</div>
+
+
+<div class="col-4">
+<div class="card bg-light mt-3">
+  <h5 class="card-header">Start a discussion</h5>
+  <div class="card-body">
+    <div class="form-group">
+    <form method="post">
+      {% csrf_token %}
+      {{ form| crispy }}
+      <button class="btn btn-outline-success" type="submit">Post </button>
+      </form>
+      </div>
+  </div>
+</div>
+
+</div>
+
+<!-- Footer -->
+<footer class="page-footer font-small blue">
+
+  <div class="footer-copyright text-center py-3">© 2020 Copyright:
+    <a href="https://byterhythms.com/"> byteRhythms.com</a>
+  </div>
+ 
+
+</footer>
+<!-- Footer -->
+{% endblock %}
